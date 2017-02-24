@@ -1,4 +1,4 @@
-package Parsing;
+package parsing;
 
 public class ParsingDebug {
 	public static void println(Object s){

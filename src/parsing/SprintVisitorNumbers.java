@@ -1,8 +1,8 @@
-package Parsing;
+package parsing;
 
 import org.antlr.v4.runtime.misc.NotNull;
 
-public class SprintVisitor extends SprintParserBaseVisitor<Object> {
+public class SprintVisitorNumbers extends SprintParserBaseVisitor<Object> {
 	//do I need to take care of paren promotion or level switching?
 	@Override
 	public Object visitIntOrigin(@NotNull SprintParserParser.IntOriginContext ctx){
@@ -25,6 +25,26 @@ public class SprintVisitor extends SprintParserBaseVisitor<Object> {
 			}
 			else{
 				return (Double)numA * (Double)numB;
+			}
+		}
+	}
+	public Object visitMod(@NotNull SprintParserParser.ModContext ctx){
+		Object numA=visit(ctx.mathLvl2(0));
+		Object numB=visit(ctx.mathLvl2(1));
+		if(numA instanceof Long){
+			if(numB instanceof Long){
+				return (Long)numA % (Long)numB;
+			}
+			else{
+				return (Long)numA % (Double)numB;
+			}
+		}
+		else{
+			if(numB instanceof Long){
+				return (Double)numA % (Long)numB;
+			}
+			else{
+				return (Double)numA % (Double)numB;
 			}
 		}
 	}
@@ -64,17 +84,7 @@ public class SprintVisitor extends SprintParserBaseVisitor<Object> {
 	public Object visitNot(@NotNull SprintParserParser.NotContext ctx)
 	{
 		Object numA=visit(ctx.mathLvl3());
-		
-		if(numA instanceof Long){
-			if( (Long)numA==0)
-				return new Long(1);
-			return new Long(0);
-		}
-		else{
-			if( (Double)numA==0)
-				return new Long(1);
-			return new Long(0);
-		}
+		return bool2Num(!num2Bool(numA));
 	}
 	@Override
 	public Object visitPlus(@NotNull SprintParserParser.PlusContext ctx)
@@ -121,6 +131,116 @@ public class SprintVisitor extends SprintParserBaseVisitor<Object> {
 		}
 	}
 	@Override
+	public Object visitLogicEqual(@NotNull SprintParserParser.LogicEqualContext ctx)
+	{
+		Object numA=visit(ctx.mathLvl3(0));
+		Object numB=visit(ctx.mathLvl3(1));
+		if(numA instanceof Long){
+			if(numB instanceof Long){
+				return bool2Num((long) numA == (long) numB);
+			}
+			else{
+				return bool2Num(((long) numA) == ((double) numB));
+			}
+		}
+		else{
+			if(numB instanceof Long){
+				return bool2Num((double) numA == (long) numB);
+			}
+			else{
+				return bool2Num((double) numA == (double) numB);
+			}
+		}
+	}
+	@Override
+	public Object visitLess(@NotNull SprintParserParser.LessContext ctx)
+	{
+		Object numA=visit(ctx.mathLvl3(0));
+		Object numB=visit(ctx.mathLvl3(1));
+		if(numA instanceof Long){
+			if(numB instanceof Long){
+				return bool2Num((long) numA < (long) numB);
+			}
+			else{
+				return bool2Num(((long) numA) < ((double) numB));
+			}
+		}
+		else{
+			if(numB instanceof Long){
+				return bool2Num((double) numA < (long) numB);
+			}
+			else{
+				return bool2Num((double) numA < (double) numB);
+			}
+		}
+	}
+	@Override
+	public Object visitLeq(@NotNull SprintParserParser.LeqContext ctx)
+	{
+		Object numA=visit(ctx.mathLvl3(0));
+		Object numB=visit(ctx.mathLvl3(1));
+		if(numA instanceof Long){
+			if(numB instanceof Long){
+				return bool2Num((long) numA <= (long) numB);
+			}
+			else{
+				return bool2Num(((long) numA) <= ((double) numB));
+			}
+		}
+		else{
+			if(numB instanceof Long){
+				return bool2Num((double) numA <= (long) numB);
+			}
+			else{
+				return bool2Num((double) numA <= (double) numB);
+			}
+		}
+	}
+	@Override
+	public Object visitGreater(@NotNull SprintParserParser.GreaterContext ctx)
+	{
+		Object numA=visit(ctx.mathLvl3(0));
+		Object numB=visit(ctx.mathLvl3(1));
+		if(numA instanceof Long){
+			if(numB instanceof Long){
+				return bool2Num((long) numA > (long) numB);
+			}
+			else{
+				return bool2Num(((long) numA) > ((double) numB));
+			}
+		}
+		else{
+			if(numB instanceof Long){
+				return bool2Num((double) numA > (long) numB);
+			}
+			else{
+				return bool2Num((double) numA > (double) numB);
+			}
+		}
+	}
+	@Override
+	public Object visitGeq(@NotNull SprintParserParser.GeqContext ctx)
+	{
+		Object numA=visit(ctx.mathLvl3(0));
+		Object numB=visit(ctx.mathLvl3(1));
+		if(numA instanceof Long){
+			if(numB instanceof Long){
+				return bool2Num((long) numA >= (long) numB);
+			}
+			else{
+				return bool2Num(((long) numA) >= ((double) numB));
+			}
+		}
+		else{
+			if(numB instanceof Long){
+				return bool2Num((double) numA >= (long) numB);
+			}
+			else{
+				return bool2Num((double) numA >= (double) numB);
+			}
+		}
+	}
+	@Override
 	public Object visitLvl1toLvl2(@NotNull SprintParserParser.Lvl1toLvl2Context ctx){
 		return visit(ctx.mathLvl1());
 	}
@@ -157,4 +277,35 @@ public class SprintVisitor extends SprintParserBaseVisitor<Object> {
 			return true;
 		}
 	}
+	public Object visitConvFloat(@NotNull SprintParserParser.ConvFloatContext ctx) { 
+		Object a =visit(ctx.mathLvl4());
+		if(a instanceof Double){
+			return a;
+		}
+		else{
+			return (double) ((long)a);
+		} 
+		
+	}
+	public Object visitConvInt(@NotNull SprintParserParser.ConvIntContext ctx) { 
+		Object a =visit(ctx.mathLvl4());
+		if(a instanceof Double){
+			return (long) ((double)a);
+		}
+		else{
+			return a;
+		} 
+		
+	
+	}
+	public Object visitStringCat(@NotNull SprintParserParser.StringCatContext ctx){
+		String s1 = (String) visit(ctx.string(0));
+		String s2 = (String) visit(ctx.string(1));
+		return s1+s2;
+	}
+	public Object visitStringOrigin(@NotNull SprintParserParser.StringOriginContext ctx){
+		return ctx.STRING().getText().substring(1, ctx.STRING().getText().length()-1);
+	}
+	
+	
 }

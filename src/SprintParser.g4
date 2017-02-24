@@ -1,24 +1,26 @@
 grammar SprintParser;
 
-
+statement:	print | assign | declare ;
 print: 		'print(' data ')'		#PrintData
 	;
 
 data:		mathLvl4				#MathToData
-	|		STRING					#StringToData
+	|		string					#StringToData
 	|		NAME					#NameToData
+	|		arrList					#ArrToData
 	;
 
 mathLvl1:	mathLvl1 '^' mathLvl1	#Exponent
 	|		'(' mathLvl4 ')'		#ParenPromote
 	|		'int(' mathLvl4 ')'		#ConvInt
-	|		'float(' mathLvl4 ')'		#ConvFloat
+	|		'float(' mathLvl4 ')'	#ConvFloat
 	|		INT						#IntOrigin
 	|		FLOAT					#FloatOrigin
 	;
 
 mathLvl2:	mathLvl2 '*' mathLvl2	#Mult
 	|		mathLvl2 '/' mathLvl2	#Div
+	|		mathLvl2 '%' mathLvl2	#Mod
 	|		mathLvl1				#Lvl1toLvl2
 	;
 
@@ -38,19 +40,34 @@ mathLvl4:	mathLvl4 '&&' mathLvl4	#And
 	|		mathLvl3				#Lvl3toLvl4
 	;
 
-assignMath: NAME '=' mathLvl4;
+string: STRING				#StringOrigin
+	|	string '+' string	#StringCat
+	;
 
-assignString: NAME '=' STRING;
 
-declareInt: 'int' NAME;
-declareFloat: 'float' NAME;
-declareString: 'string' NAME;
+//how to handle Dictionary? -- dictionary only has methods
+assign: NAME '=' mathLvl4	#AssMath
+	|	NAME '=' string		#AssString
+	|	NAME '=' arrList	#AssArr
+	|	NAME '[' MathLvl4 ']' '=' data #AssListElement
+	;
 
-stringCat: STRING '+' STRING;
+
+
+declare:	'int' NAME		#DeclInt
+		|	'float' NAME	#DeclFloat
+		|	'linklist' NAME	#DeclLink
+		|	'array' NAME	#DeclArray
+		|	'dict' NAME		#DeclDict
+		|	'string' NAME	#DeclString
+		;
+
+listItem: data ',';
+arrList: 'arr[' listItem* ']';
 
 //todo: list handling, object/dictionary handling
 INT: '-'? [0-9]+;
 FLOAT: '-'? [0-9]* '.' [0-9]+;
 NAME: [a-zA-Z] [a-zA-Z_0-9]*;
-STRING: '\"' [^'\"'] '\"';
+STRING: '"' .*? '"';
 WS : [ \t\r\n]+ -> skip ;//skip whitespace
