@@ -1,1 +1,13 @@
-3+3
+function changeANumber(int number, float otherNumber, string someWords){
+	int anotherNumber;
+	anotherNumber= number*otherNumber;
+	return -1*anotherNumber;
+}
+method main(){
+	print("hi, world");
+	float a= changeANumber(10, 10, "foobar");
+	print(a);
+}
+method anotherOne( ){
+	return 1;
+}
