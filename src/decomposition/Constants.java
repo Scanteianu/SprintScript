@@ -21,7 +21,17 @@ public class Constants {
 	final static String KEYWORD_RETURN="return";
 	final static String KEYWORD_TAIL_RETURN="tailreturn";
 	
-	final static String[] CONTROL_FLOW={KEYWORD_IF, KEYWORD_ELSE, KEYWORD_WHILE, KEYWORD_PARALLEL};
-	final static String[] PROGRAM_STRUCTURE={KEYWORD_METHOD, KEYWORD_FUNCTION, KEYWORD_DYNAFUNC};
+	final static String KEYWORD_PRINT="print";
+	final static String KEYWORD_INT="int";
+	final static String KEYWORD_FLOAT="float";
+	final static String KEYWORD_STRING="string";
+	final static String KEYWORD_DICT="dict";
+	final static String KEYWORD_ARRAY="array";
+	final static String KEYWORD_LINKLIST="linklist";
+	
+	public final static String[] DECLARATION_KEYWORDS={KEYWORD_INT, KEYWORD_FLOAT, KEYWORD_STRING,KEYWORD_DICT, KEYWORD_ARRAY, KEYWORD_LINKLIST};
+	public final static String[] RESERVED_STATEMENT_KEYWORDS={KEYWORD_PRINT,KEYWORD_INT, KEYWORD_FLOAT, KEYWORD_STRING,KEYWORD_DICT, KEYWORD_ARRAY, KEYWORD_LINKLIST};
+	public final static String[] CONTROL_FLOW={KEYWORD_IF, KEYWORD_ELSE, KEYWORD_WHILE, KEYWORD_PARALLEL};
+	public final static String[] PROGRAM_STRUCTURE={KEYWORD_METHOD, KEYWORD_FUNCTION, KEYWORD_DYNAFUNC};
 	
 }

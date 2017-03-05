@@ -49,7 +49,7 @@ string: STRING				#StringOrigin
 assign: NAME '=' mathLvl4	#AssMath
 	|	NAME '=' string		#AssString
 	|	NAME '=' arrList	#AssArr
-	|	NAME '[' MathLvl4 ']' '=' data #AssListElement
+	|	NAME '[' mathLvl4']' '=' data #AssListElement
 	;
 
 

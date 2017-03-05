@@ -11,3 +11,9 @@ method main(){
 method anotherOne( ){
 	return 1;
 }
+method halp(int a){
+	if(2){
+	
+		print("hi");
+	}
+}

@@ -1,0 +1,22 @@
+int a
+int i
+float b
+array c
+array myArray
+dict d
+string e
+print("declared some shit, bruh")
+a=int(7)
+i=3
+b=5.5
+c[0]="sumadre"
+e="momofuku"
+print(i)
+print(c[0])
+string temp
+temp=c[0]
+myArray[0]=temp
+c[0]="pizzeria fornetti"
+print(myArray[0])
+myArray[0]=c[0]
+print(myArray[0])
