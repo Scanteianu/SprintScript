@@ -24,8 +24,8 @@ public class ProgramDecomposer {
 				b.setBody(methodAndFriends[2]);
 				s=methodAndFriends[3];
 				library.function.put(b.getName(), b);
-				DecompDebug.println("Function");
-				DecompDebug.println(b.toString());
+				//DecompDebug.println("Function");
+				//DecompDebug.println(b.toString());
 			}
 			else if(s.startsWith(Constants.KEYWORD_DYNAFUNC))			{
 				//TODO
@@ -41,8 +41,8 @@ public class ProgramDecomposer {
 				b.setBody(methodAndFriends[2]);
 				s=methodAndFriends[3];
 				library.methods.put(b.getName(), b);
-				DecompDebug.println("Method");
-				DecompDebug.println(b.toString());
+				//DecompDebug.println("Method");
+				//DecompDebug.println(b.toString());
 				
 				
 			}

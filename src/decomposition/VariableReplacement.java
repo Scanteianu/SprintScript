@@ -197,6 +197,18 @@ public class VariableReplacement {
 		if(frame.integer.containsKey(variable)){
 			return frame.integer.get(variable)+"";
 		}
+		if(frame.integer.containsKey(variable)){
+			return frame.integer.get(variable)+"";
+		}
+		if(frame.arrLists.containsKey(variable)){
+			return "arrList_"+variable;
+		}
+		if(frame.dicts.containsKey(variable)){
+			return "dict_"+variable;
+		}
+		if(frame.funcLists.containsKey(variable)){
+			return "funcList_"+variable;
+		}
 		return null;
 	}
 	//for execute function, if the return type is of stack frame, assume recursive return. 

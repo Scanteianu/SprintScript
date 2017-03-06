@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import datastructure.Library;
+
 public class decompTest {
 	public static void main(String[] args) {
 		try {
@@ -12,7 +14,9 @@ public class decompTest {
 			while(sc.hasNextLine()){
 				file+=(sc.nextLine())+"\n";
 			}
-			ProgramDecomposer.decomposeProgram(file);
+			Library library = ProgramDecomposer.decomposeProgram(file);
+			
+			//read and run main.
 			sc.close();
 			
 		} catch (FileNotFoundException e) {

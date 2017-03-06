@@ -74,5 +74,8 @@ public class SprintVisitorVars extends SprintVisitorNumbers {
 		 return null;
 	 
 	 }
+	 @Override public Object visitNameToData(@NotNull SprintParserParser.NameToDataContext ctx){
+		 return "var:"+ctx.NAME().getText();
+	 }
 	 
 }

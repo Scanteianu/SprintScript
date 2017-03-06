@@ -1,6 +1,6 @@
 grammar SprintParser;
 
-statement:	print | assign | declare ;
+statement:	print | assign | declare | returnData ;
 print: 		'print(' data ')'		#PrintData
 	;
 
@@ -9,6 +9,8 @@ data:		mathLvl4				#MathToData
 	|		NAME					#NameToData
 	|		arrList					#ArrToData
 	;
+
+returnData: 'return' data;
 
 mathLvl1:	mathLvl1 '^' mathLvl1	#Exponent
 	|		'(' mathLvl4 ')'		#ParenPromote

@@ -1,19 +1,29 @@
-function changeANumber(int number, float otherNumber, string someWords){
-	int anotherNumber;
-	anotherNumber= number*otherNumber;
-	return -1*anotherNumber;
-}
 method main(){
-	print("hi, world");
-	float a= changeANumber(10, 10, "foobar");
-	print(a);
+	int a;
+	int i;
+	float b;
+	array c;
+	array myArray;
+	dict d;
+	string e;
+	print("declared some shit, bruh");
+	a=int(7);
+	i=3;
+	b=5.5;
+	c[0]="sumadre";
+	e="momofuku";
+	print(i);
+	print(c[0]);
+	string temp;
+	temp=c[0];
+	myArray[0]=temp;
+	c[0]="pizzeria fornetti";
+	print(myArray[0]);
+	myArray[0]=c[0];
+	print(myArray[0]);
+	return myArray;
+
 }
-method anotherOne( ){
-	return 1;
-}
-method halp(int a){
-	if(2){
-	
-		print("hi");
-	}
+method foo(){
+	print bar;
 }

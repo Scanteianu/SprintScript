@@ -19,7 +19,7 @@ public class ParsingTester {
 		try {
 			Scanner sc = new Scanner(new File("input2.txt"));
 			while(sc.hasNextLine()){
-				evaluateExpression(sc.nextLine(), frame);
+				ParsingDebug.println(evaluateExpression(sc.nextLine(), frame));
 			}
 			sc.close();
 		} catch (FileNotFoundException e) {
@@ -30,7 +30,7 @@ public class ParsingTester {
 		//ParsingDebug.println(frame.arrLists.get("c").get(0));
 
 	}
-	private static void evaluateExpression(String sent, StackFrame frame){
+	private static Object evaluateExpression(String sent, StackFrame frame){
 		 VariableReplacement vr= new VariableReplacement();
 		 vr.setFrame(frame);
 		 sent=sent.trim();
@@ -51,7 +51,7 @@ public class ParsingTester {
 		 SprintVisitorVars visitor = new SprintVisitorVars();
 		
 		 visitor.setFrame(frame);
-	     visitor.visit(tree);
+	     return visitor.visit(tree);
 
 	     //ParsingDebug.println("parsed: "+sent);
 	     
