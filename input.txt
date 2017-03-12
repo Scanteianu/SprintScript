@@ -1,4 +1,4 @@
-method main(){
+method main2(){
 	int a;
 	int i;
 	float b;
@@ -23,6 +23,35 @@ method main(){
 	print(myArray[0]);
 	return myArray;
 
+}
+method main(){
+	int a;
+	int b;
+	a=2;
+	b=3;
+	if(a==3){
+		print("elephants are fat");
+	}
+	else{
+		if(a==2){
+			print("hippos are very scary");
+		}
+		else{
+		
+		}
+		print("giraffes smell bad");
+	}
+	print("entering loop")
+	int i;
+	i=0;
+	array list;
+	
+	while(i<10){
+		print(i);
+		list[i]=i;
+		i=i+1;
+	}
+	return list;
 }
 method foo(){
 	print bar;
