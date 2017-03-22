@@ -24,6 +24,13 @@ method main2(){
 	return myArray;
 
 }
+method foo(){
+	print("method called");
+}
+method foo2(int a){
+	print("here is a passed value");
+	print(a);
+}
 method main(){
 	int a;
 	int b;
@@ -51,8 +58,16 @@ method main(){
 		list[i]=i;
 		i=i+1;
 	}
+	print(list);
+	foo();
+	foo2(i);
+	int j;
+	j=add(i,a);
+	print(a);
+	print(j);
+	print("13");
 	return list;
 }
-method foo(){
-	print bar;
+method add(int a, int b){
+	return a+b;
 }

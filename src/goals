@@ -1,0 +1,5 @@
+make methods run
+make built in methods: has/put/get for dicts, len for lists
+build bootstrapped libraries? (list to string, isempty for list)
+Console Input?
+Call Main with args?

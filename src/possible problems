@@ -1,3 +1,5 @@
 1.array1[i]=array2[j] may not work, may have to go through a temp. 
 2. linked list support is nonexistent.
 3. array indices in general must be either an int literal or an int variable.
+4. objects returned from a method call/list dereference must be stored in a reference before being acted upon further
+5. ie: getMyList()[7]; is no good. array list; list=getMyList(); list[7]; is better.

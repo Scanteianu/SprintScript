@@ -2,11 +2,14 @@ package decomposition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import datastructure.Library;
 import datastructure.StackFrame;
 
 public class VariableReplacement {
 	private StackFrame frame;
+	private Library library;
 	/**
 	 * replaced primitives, dereferenced lists
 	 * returns null if nothing is left to do (ie: a reference copy)
@@ -26,7 +29,7 @@ public class VariableReplacement {
 		boolean prefixIsJustAssign=false;
 		String output="";
 		for(int i =0; i<original.length(); i++){
-			if(original.charAt(i)=='\"'){
+			if(original.charAt(i)==Constants.QUOTE){
 				isQuoted=!isQuoted;
 			}
 				
@@ -87,10 +90,10 @@ public class VariableReplacement {
 					}
 					else{
 						char lookahead=original.charAt(j);
-						if(lookahead=='['){//take care of a list deref.
+						if(lookahead==Constants.OPEN_BRACKET){//take care of a list deref.
 							//as of current hack, we're not allowing the list index to contain other list elements, so... eat it...
 							
-							String[] beReturns=BlockExtractor.extractChunk(original.substring(j), '[', ']', '\"');
+							String[] beReturns=BlockExtractor.extractChunk(original.substring(j), Constants.OPEN_BRACKET, Constants.CLOSE_BRACKET, '\"');
 							//DecompDebug.println(currentVarName+"["+beReturns[0]+"]");
 							if(beReturns[1].startsWith("=") && !beReturns[1].startsWith("==")&&!eliminatedAssign){
 								try{
@@ -99,7 +102,7 @@ public class VariableReplacement {
 								catch(NumberFormatException e){
 									beReturns[0]=this.derefPrimitive(beReturns[0].trim());
 								}
-								output+=original.substring(0, j)+'['+beReturns[0]+"]";
+								output+=original.substring(0, j)+Constants.OPEN_BRACKET+beReturns[0]+Constants.CLOSE_BRACKET;
 								
 								prefixIsJustAssign=true;
 								eliminatedAssign=true;
@@ -141,12 +144,38 @@ public class VariableReplacement {
 							}
 							
 						}
-						else if(lookahead=='('){
+						else if(lookahead==Constants.OPEN_PAREN){
 							//take care of a function call here.
 							//make sure to handle built in functions once they start to exist.
 							//if, while, else, and parallel may be caught here, but they shouldn't
 							//because they always start instruction (so if we trim the instruction, and starts with...)
 							//print should be handled in a similar way.
+							String[] beReturns=BlockExtractor.extractChunk(original.substring(j), Constants.OPEN_PAREN, Constants.CLOSE_PAREN, '\"');
+							Object methReturn=executeMethod(currentVarName, beReturns[0]);
+							//TODO: figure out what happens if object is returned.
+							
+							if(prefixIsJustAssign){
+								output=output.trim();
+								String keyName=output.substring(0, output.length()-2);
+								if(frame.dicts.containsKey(keyName)){
+									frame.dicts.put(keyName, (HashMap<Object, Object>) methReturn);
+									return null;
+								}
+								else if(frame.arrLists.containsKey(currentVarName)){
+									frame.arrLists.put(keyName, (ArrayList<Object>) methReturn);
+									return null;
+								}
+								else if(frame.funcLists.containsKey(currentVarName)){
+									//TODO: do this shit as well.
+								}
+								
+									
+							}
+							
+							
+							if(methReturn!=null)
+								output+=methReturn.toString();
+							original=beReturns[1];
 						}
 						else if(lookahead=='=' &&!eliminatedAssign&&original.charAt(j+1)!='='){
 							//take care of the original assign case. 
@@ -179,7 +208,7 @@ public class VariableReplacement {
 			}
 			
 		}
-		
+		//DecompDebug.println(output);
 		return output;
 	}
 	/**
@@ -214,8 +243,49 @@ public class VariableReplacement {
 	//for execute function, if the return type is of stack frame, assume recursive return. 
 	//this method should return a string for any primitive type. Otherwise, return an object, and handle as such.
 	public Object executeMethod(String name, String args){
-		//TODO: write the motherfucker
-		return null;
+		StackFrame newFrame=new StackFrame();
+		List<String> origArgList=library.methods.get(name).getArgs();
+		List<String> passedArgs=BlockExtractor.separateArgs(args);
+		//TODO: args dereferenced or object moved
+		for(int i=0; i<origArgList.size();i++){
+			
+			String s=origArgList.get(i);
+			RunMethod.executeBlock(s+Constants.END_STATEMENT, newFrame, library);
+			s=s.substring(s.indexOf(' '));
+			s=s.trim();
+			String arg=passedArgs.get(i).trim();
+			if(derefPrimitive(arg)!=null){
+				s+='='+derefPrimitive(arg);
+				RunMethod.executeBlock(s+Constants.END_STATEMENT, newFrame, library);
+			}
+			else{
+				if(frame.arrLists.containsKey(arg)){
+					newFrame.arrLists.put(arg, frame.arrLists.get(arg));
+				}
+				else if(frame.dicts.containsKey(arg)){
+					newFrame.dicts.put(arg, frame.dicts.get(arg));
+				}
+				else if(frame.funcLists.containsKey(arg)){
+					newFrame.funcLists.put(arg, frame.funcLists.get(arg));
+				}
+				else{
+					s+='='+arg;
+					RunMethod.executeBlock(s+Constants.END_STATEMENT, newFrame, library);
+				}
+			}
+			
+			
+		}
+		
+		Object temp=RunMethod.executeMethod(name, newFrame, library);
+		
+		if(temp instanceof String)
+			return "\""+temp+"\"";
+		if(temp instanceof Long)
+			return temp+"";
+		if(temp instanceof Double)
+			return temp+"";
+		return temp;
 	}
 	/**
 	 * returns a string or an object of another kind. If it's not a string, handle as object dereference.
@@ -258,4 +328,11 @@ public class VariableReplacement {
 	public void setFrame(StackFrame frame) {
 		this.frame = frame;
 	}
+	public Library getLibrary() {
+		return library;
+	}
+	public void setLibrary(Library library) {
+		this.library = library;
+	}
+	
 }
