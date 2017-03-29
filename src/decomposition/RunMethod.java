@@ -114,6 +114,7 @@ public class RunMethod {
 		 if(sent==null||sent.length()==0)
 			 return null;
 		 //ParsingDebug.println("var replaced : "+sent);
+		 try{
 		 SprintParserLexer lexer = new SprintParserLexer(new ANTLRInputStream(sent));
 		 CommonTokenStream tokens = new CommonTokenStream(lexer);
 		 SprintParserParser parser = new SprintParserParser(tokens);
@@ -122,6 +123,12 @@ public class RunMethod {
 		
 		 visitor.setFrame(frame);
 	     return visitor.visit(tree);
+		 }
+		 catch(Exception e){
+			 //ParsingDebug.println("exception: "+e.toString());
+			 e.printStackTrace();
+			 return null;
+		 }
 
 	     //ParsingDebug.println("parsed: "+sent);
 	     

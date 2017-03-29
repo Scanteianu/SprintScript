@@ -73,12 +73,12 @@ public class SprintVisitorNumbers extends SprintParserBaseVisitor<Object> {
 	@Override
 	public Object visitAnd(@NotNull SprintParserParser.AndContext ctx)
 	{
-		return this.bool2Num(num2Bool(ctx.mathLvl4(0))&&num2Bool(ctx.mathLvl4(1)));
+		return this.bool2Num(num2Bool(visit(ctx.mathLvl4(0)))&&num2Bool(visit(ctx.mathLvl4(1))));
 	}
 	@Override
 	public Object visitOr(@NotNull SprintParserParser.OrContext ctx)
 	{
-		return this.bool2Num(num2Bool(ctx.mathLvl4(0))||num2Bool(ctx.mathLvl4(1)));
+		return this.bool2Num(num2Bool(visit(ctx.mathLvl4(0)))||num2Bool(visit(ctx.mathLvl4(1))));
 	}
 	@Override
 	public Object visitNot(@NotNull SprintParserParser.NotContext ctx)
@@ -106,6 +106,15 @@ public class SprintVisitorNumbers extends SprintParserBaseVisitor<Object> {
 			else{
 				return (Double) numA + (Double) numB;
 			}
+		}
+	}
+	@Override public Object visitNegate(@NotNull SprintParserParser.NegateContext ctx) {
+		Object numA=visit(ctx.mathLvl3());
+		if(numA instanceof Long){
+			return -1*(Long)numA;
+		}
+		else{
+			return -1*(Double)numA;
 		}
 	}
 	@Override

@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import datastructure.Library;
+import datastructure.LinkedListNode;
 import datastructure.StackFrame;
+import parsing.ParsingDebug;
 
 public class VariableReplacement {
 	private StackFrame frame;
@@ -176,6 +178,9 @@ public class VariableReplacement {
 							if(methReturn!=null)
 								output+=methReturn.toString();
 							original=beReturns[1];
+							i=-1;
+							//DecompDebug.println("somepont: "+output+original);
+							
 						}
 						else if(lookahead=='=' &&!eliminatedAssign&&original.charAt(j+1)!='='){
 							//take care of the original assign case. 
@@ -209,6 +214,7 @@ public class VariableReplacement {
 			
 		}
 		//DecompDebug.println(output);
+		
 		return output;
 	}
 	/**
@@ -254,22 +260,34 @@ public class VariableReplacement {
 			s=s.substring(s.indexOf(' '));
 			s=s.trim();
 			String arg=passedArgs.get(i).trim();
-			if(derefPrimitive(arg)!=null){
-				s+='='+derefPrimitive(arg);
+			//do return work here
+			String argExecInput="return "+arg+Constants.END_STATEMENT;
+			Object argExecOutput=RunMethod.executeBlock(argExecInput, frame, library);
+			if(argExecOutput!=null && argExecOutput instanceof String){
+				s+='='+argExecOutput.toString();
+				RunMethod.executeBlock(s+Constants.END_STATEMENT, newFrame, library);
+			}
+			else if(argExecOutput!=null && argExecOutput instanceof Long){
+				s+='='+argExecOutput.toString();
+				RunMethod.executeBlock(s+Constants.END_STATEMENT, newFrame, library);
+			}
+			else if(argExecOutput!=null && argExecOutput instanceof Double){
+				s+='='+argExecOutput.toString();
 				RunMethod.executeBlock(s+Constants.END_STATEMENT, newFrame, library);
 			}
 			else{
-				if(frame.arrLists.containsKey(arg)){
-					newFrame.arrLists.put(arg, frame.arrLists.get(arg));
+				if(frame.arrLists.containsKey(s)){
+					newFrame.arrLists.put(s, (ArrayList<Object>)argExecOutput);
 				}
 				else if(frame.dicts.containsKey(arg)){
-					newFrame.dicts.put(arg, frame.dicts.get(arg));
+					newFrame.dicts.put(s, (HashMap<Object,Object>)argExecOutput);
 				}
 				else if(frame.funcLists.containsKey(arg)){
-					newFrame.funcLists.put(arg, frame.funcLists.get(arg));
+					newFrame.funcLists.put(s, (LinkedListNode)argExecOutput);
 				}
 				else{
 					s+='='+arg;
+					DecompDebug.println(name+s+argExecOutput);
 					RunMethod.executeBlock(s+Constants.END_STATEMENT, newFrame, library);
 				}
 			}
