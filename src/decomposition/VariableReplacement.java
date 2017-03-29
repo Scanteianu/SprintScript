@@ -7,7 +7,7 @@ import java.util.List;
 import datastructure.Library;
 import datastructure.LinkedListNode;
 import datastructure.StackFrame;
-import parsing.ParsingDebug;
+import datastructure.TailCall;
 
 public class VariableReplacement {
 	private StackFrame frame;
@@ -249,6 +249,9 @@ public class VariableReplacement {
 	//for execute function, if the return type is of stack frame, assume recursive return. 
 	//this method should return a string for any primitive type. Otherwise, return an object, and handle as such.
 	public Object executeMethod(String name, String args){
+		return executeMethod(name, args,false);
+	}
+	public Object executeMethod(String name, String args, boolean isTail){
 		StackFrame newFrame=new StackFrame();
 		List<String> origArgList=library.methods.get(name).getArgs();
 		List<String> passedArgs=BlockExtractor.separateArgs(args);
@@ -294,7 +297,12 @@ public class VariableReplacement {
 			
 			
 		}
-		
+		if(isTail){
+			TailCall call=new TailCall();
+			call.frame=newFrame;
+			call.methName=name;
+			return call;
+		}
 		Object temp=RunMethod.executeMethod(name, newFrame, library);
 		
 		if(temp instanceof String)

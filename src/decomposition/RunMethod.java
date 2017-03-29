@@ -6,14 +6,20 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import datastructure.Library;
 import datastructure.StackFrame;
-import parsing.ParsingDebug;
+import datastructure.TailCall;
 import parsing.SprintParserLexer;
 import parsing.SprintParserParser;
 import parsing.SprintVisitorVars;
 
 public class RunMethod {
 	public static Object executeMethod(String name, StackFrame frame, Library library){
-		return executeBlock(library.methods.get(name).getBody(),frame,library);
+		Object returnObj=executeBlock(library.methods.get(name).getBody(),frame,library);
+		while(returnObj instanceof TailCall){
+			TailCall call=(TailCall)returnObj;
+			returnObj=executeBlock(library.methods.get(call.methName).getBody(),call.frame,library);
+			//DecompDebug.println("TailSuccess");
+		}
+		return returnObj;
 	}
 	public static Object executeBlock(String block, StackFrame frame, Library library){
 		String current=block;
@@ -64,6 +70,15 @@ public class RunMethod {
 				}
 			}
 			else if(current.startsWith(Constants.KEYWORD_PARALLEL)){
+				
+			}
+			else if(current.startsWith(Constants.KEYWORD_TAIL_RETURN)){
+				VariableReplacement vr= new VariableReplacement();
+				vr.setFrame(frame);
+				vr.setLibrary(library);
+				current=current.substring(Constants.KEYWORD_TAIL_RETURN.length()).trim();
+				String ecRetTC[]=BlockExtractor.extractChunk(current, Constants.OPEN_PAREN, Constants.CLOSE_PAREN, Constants.QUOTE);
+				return vr.executeMethod(current.substring(0, current.indexOf(Constants.OPEN_PAREN)), ecRetTC[0], true);
 				
 			}
 			else{

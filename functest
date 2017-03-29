@@ -23,6 +23,8 @@ method main(){
 	i=fib(4);
 	print(i);
 	print(fib2(2,32));
+	printNumTail(1000);
+	printNum(1000);
 	
 }
 method foo(int a, int b){
@@ -34,4 +36,16 @@ method fib2(int i){
 		return 1;
 	}
 	return fib2(i-1)+fib2(i-2);
+}
+method printNum(int i){
+	if(i>1){
+		print(i);
+		return printNum(i-1);
+	}
+}
+method printNumTail(int i){
+	if(i>=1){
+		print(i);
+		tailreturn printNumTail(i-1);
+	}
 }
