@@ -1,7 +1,7 @@
 Of immediate importance:
 
 	-Parallel Blocks/Auto Multithreading
-	-Implementing the len(), and dictionary functions (ie: put, get, contains)
+	-Implementing the len(), insert(), and remove() for lists, and dictionary functions (ie: put, get, contains)
 
 Of near future importance:
 
