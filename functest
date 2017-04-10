@@ -20,9 +20,9 @@ method main(){
 	int i;
 	i=2;
 	print(2-1);
-	i=fib(4);
+	i=fib(9);
 	print(i);
-	print(fib2(2,32));
+	print(fib2(9));
 	printNumTail(1000);
 	printNum(1000);
 	

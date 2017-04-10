@@ -7,6 +7,21 @@ public class FunctionBlock {
 	private String name;
 	private List<String> args = new LinkedList<String>();
 	private String body="";
+	private boolean isTabled=false;
+	
+	public FunctionBlock(String name, List<String> args, String body, boolean isTabled) {
+		super();
+		this.name = name;
+		this.args = args;
+		this.body = body;
+		this.isTabled = isTabled;
+	}
+	public boolean isTabled() {
+		return isTabled;
+	}
+	public void setTabled(boolean isTabled) {
+		this.isTabled = isTabled;
+	}
 	public String getName() {
 		return name;
 	}

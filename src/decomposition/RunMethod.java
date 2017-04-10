@@ -6,18 +6,35 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import datastructure.Library;
 import datastructure.StackFrame;
+import datastructure.Tabling;
 import datastructure.TailCall;
+import parsing.ParsingDebug;
 import parsing.SprintParserLexer;
 import parsing.SprintParserParser;
 import parsing.SprintVisitorVars;
 
 public class RunMethod {
 	public static Object executeMethod(String name, StackFrame frame, Library library){
+		StackFrame origFrame=null;
+		if(library.methods.get(name).isTabled()){
+			//ParsingDebug.println("tabled: "+name);
+			if(Tabling.masterTable.get(name).containsKey(frame)){
+				//ParsingDebug.println("tabled value: "+Tabling.masterTable.get(name).get(frame));
+				return Tabling.masterTable.get(name).get(frame);
+				
+			}
+			origFrame=frame.clone();	
+		}
 		Object returnObj=executeBlock(library.methods.get(name).getBody(),frame,library);
 		while(returnObj instanceof TailCall){
 			TailCall call=(TailCall)returnObj;
 			returnObj=executeBlock(library.methods.get(call.methName).getBody(),call.frame,library);
 			//DecompDebug.println("TailSuccess");
+		}
+		if(library.methods.get(name).isTabled()){
+			
+			Tabling.masterTable.get(name).put(origFrame,returnObj);
+			//ParsingDebug.println("tabled value: "+returnObj);
 		}
 		return returnObj;
 	}

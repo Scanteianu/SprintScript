@@ -1,0 +1,18 @@
+method fib(int i){
+	if(i<=1){
+		return 1;
+	}
+	return fib(i-1)+fib(i-2);
+}
+dynafunc dynafib(int i){
+	if(i<=1){
+		return 1;
+	}
+	return dynafib(i-1)+dynafib(i-2);
+}
+method main(){
+	print(dynafib(25));
+	print(dynafib(200));
+	print(fib(25));
+	return 1;
+}

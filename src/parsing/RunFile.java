@@ -14,7 +14,7 @@ public class RunFile {
 		StackFrame frame = new StackFrame();
 		String wholeFile="";
 		try {
-			Scanner sc = new Scanner(new File("functest"));
+			Scanner sc = new Scanner(new File("tabletest"));
 			while(sc.hasNextLine()){
 				wholeFile+=sc.nextLine()+"\n";
 			}
