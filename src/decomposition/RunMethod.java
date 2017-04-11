@@ -87,7 +87,9 @@ public class RunMethod {
 				}
 			}
 			else if(current.startsWith(Constants.KEYWORD_PARALLEL)){
-				
+				//TODO: extract calls from tailreturn, block from while, create tailcalls
+				//add tailcalls to Instruction set
+				//run instructionset with current frame
 			}
 			else if(current.startsWith(Constants.KEYWORD_TAIL_RETURN)){
 				VariableReplacement vr= new VariableReplacement();

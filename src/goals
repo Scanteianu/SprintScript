@@ -1,6 +1,8 @@
 Of immediate importance:
 
 	-Parallel Blocks/Auto Multithreading
+		Rules:	each statement must be of the form var=...some function calls....
+				Nothing on the left side of any equal sign may be referenced on the right side of any operation
 	-Implementing the len(), insert(), and remove() for lists, and dictionary functions (ie: put, get, contains)
 
 Of near future importance:
@@ -13,11 +15,16 @@ Of near future importance:
 	-File I/O+Console I/O
 	
 	-Exceptions
+	
+	-Global Variables: suggested method - prefix of a global variable is global_, and that causes the switch.
 
 Of distant future importance:
 	
 	-Implementing the linked lists
+	
+	-Decent error messages/checking functions of various types to insure they're not methods or otherwise unsafe
 
 Conceptual goals:
 	
 	-Rewriting functions
+	
