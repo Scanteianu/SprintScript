@@ -9,6 +9,10 @@ Of near future importance:
 	and use Sprint Script for its simplification of functional-like concepts, 
 	and then process the output in java again).
 	
+	-List deepclone
+	
+	-External library import
+	
 	-File I/O+Console I/O
 	
 	-Exceptions
