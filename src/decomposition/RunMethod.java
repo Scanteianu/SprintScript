@@ -8,6 +8,8 @@ import datastructure.Library;
 import datastructure.StackFrame;
 import datastructure.Tabling;
 import datastructure.TailCall;
+import parallel.InstructionSet;
+import parallel.InstructionThread;
 import parsing.ParsingDebug;
 import parsing.SprintParserLexer;
 import parsing.SprintParserParser;
@@ -90,6 +92,33 @@ public class RunMethod {
 				//TODO: extract calls from tailreturn, block from while, create tailcalls
 				//add tailcalls to Instruction set
 				//run instructionset with current frame
+				String all=current.substring(Constants.KEYWORD_PARALLEL.length())+";\n"+rest;
+				String[] blockParsed=BlockExtractor.extractChunk(all.trim(), Constants.OPEN_BRACE, Constants.CLOSE_BRACE, Constants.QUOTE);
+				rest=blockParsed[1];
+				String compRet[] = new String[2];
+				InstructionSet is= new InstructionSet();
+				compRet[0]=blockParsed[0];
+				compRet[1]=blockParsed[0];
+				while(compRet!=null&&compRet[1]!=null&&compRet[0]!=null){
+					compRet=BlockExtractor.extractComponent(compRet[1], Constants.END_STATEMENT, Constants.OPEN_PAREN, Constants.CLOSE_PAREN, Constants.QUOTE);
+					//ParsingDebug.println(compRet[0]);
+					if(compRet!=null){
+						String varName  = compRet[0].substring(0, compRet[0].indexOf("=")).trim();
+						String call = compRet[0].substring(compRet[0].indexOf("=")+1).trim();
+						VariableReplacement vr= new VariableReplacement();
+						vr.setFrame(frame);
+						vr.setLibrary(library);
+		
+						String ecRetTC[]=BlockExtractor.extractChunk(call, Constants.OPEN_PAREN, Constants.CLOSE_PAREN, Constants.QUOTE);
+						TailCall callObj = (TailCall) vr.executeMethod(call.substring(0, call.indexOf(Constants.OPEN_PAREN)), ecRetTC[0], true);
+						InstructionThread it= new InstructionThread(varName,callObj.methName, callObj.frame, library);
+						is.addInstructionThread(it);
+					}
+					
+					
+				}
+				is.runAll(frame);
+				
 			}
 			else if(current.startsWith(Constants.KEYWORD_TAIL_RETURN)){
 				VariableReplacement vr= new VariableReplacement();

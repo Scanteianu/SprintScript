@@ -21,8 +21,10 @@ public class InstructionSet {
 		return frame;//is this overkill or nah??
 	}
 	private void executeThreads(){
+		//ParsingDebug.println("pre run ");
 		for(Thread t: threads)
-			t.run();
+			t.start();
+		//ParsingDebug.println("run commenced");
 		for(Thread t: threads)
 			try {
 				t.join();
@@ -30,26 +32,27 @@ public class InstructionSet {
 				ParsingDebug.println("Thread Failure in Parallel!!!");
 				e.printStackTrace();
 			}
+		//ParsingDebug.println("run done");
 	}
 	private void updateFrame(){
 		for(InstructionThread t:threads){
 			if(t.getReturnObject() instanceof Long){
-				frame.integer.put(t.getName(), (Long) t.getReturnObject());
+				frame.integer.put(t.getVarName(), (Long) t.getReturnObject());
 			}
 			if(t.getReturnObject() instanceof Double){
 				frame.floats.put(t.getName(), (Double) t.getReturnObject());
 			}
 			if(t.getReturnObject() instanceof String){
-				frame.strings.put(t.getName(), (String) t.getReturnObject());
+				frame.strings.put(t.getVarName(), (String) t.getReturnObject());
 			}
 			if(t.getReturnObject() instanceof ArrayList<?>){
-				frame.arrLists.put(t.getName(), (ArrayList<Object>) t.getReturnObject());
+				frame.arrLists.put(t.getVarName(), (ArrayList<Object>) t.getReturnObject());
 			}
 			if(t.getReturnObject() instanceof HashMap<?,?>){
-				frame.dicts.put(t.getName(), (HashMap<Object,Object>) t.getReturnObject());
+				frame.dicts.put(t.getVarName(), (HashMap<Object,Object>) t.getReturnObject());
 			}
 			if(t.getReturnObject() instanceof LinkedListNode){
-				frame.funcLists.put(t.getName(), (LinkedListNode)t.getReturnObject());
+				frame.funcLists.put(t.getVarName(), (LinkedListNode)t.getReturnObject());
 			}
 		}
 	}

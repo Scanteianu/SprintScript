@@ -1,8 +1,5 @@
 Of immediate importance:
 
-	-Parallel Blocks/Auto Multithreading
-		Rules:	each statement must be of the form var=...some function calls....
-				Nothing on the left side of any equal sign may be referenced on the right side of any operation
 	-Implementing the len(), insert(), and remove() for lists, and dictionary functions (ie: put, get, contains)
 
 Of near future importance:

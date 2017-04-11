@@ -1,0 +1,21 @@
+method fib(int i){
+	if(i<=1){
+		return 1;
+	}
+	return fib(i-1)+fib(i-2);
+}
+
+method main(){
+	int i;
+	int j;
+	int k;
+	parallel{
+		i=fib(28);
+		j=fib(29);
+		k=fib(27);
+	}
+	print(i);
+	print(j);
+	print(k);
+	return 1;
+}
