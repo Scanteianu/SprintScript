@@ -3,3 +3,4 @@
 3. array indices in general must be either an int literal or an int variable.
 4. objects returned from a method call/list dereference must be stored in a reference before being acted upon further
 5. ie: getMyList()[7]; is no good. array list; list=getMyList(); list[7]; is better.
+If a var/meth name starts with a data structure name, may be a problem.

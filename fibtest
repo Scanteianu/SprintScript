@@ -11,7 +11,8 @@ dynafunc dynafib(int i){
 	return dynafib(i-1)+dynafib(i-2);
 }
 method main(){
-	print(dynafib(29));
+	print(fib(27));
+	print(fib(28));
 	print(fib(29));
 	return 1;
 }

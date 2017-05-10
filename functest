@@ -16,7 +16,7 @@ method fib(int i){
 	
 	
 }
-method main(){
+method main2(){
 	int i;
 	i=2;
 	print(2-1);
@@ -36,6 +36,11 @@ method fib2(int i){
 		return 1;
 	}
 	return fib2(i-1)+fib2(i-2);
+}
+method main(){
+	printNumTail(100000);
+	printNum(1000);
+	
 }
 method printNum(int i){
 	if(i>1){

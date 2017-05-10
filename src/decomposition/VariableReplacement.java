@@ -251,7 +251,132 @@ public class VariableReplacement {
 	public Object executeMethod(String name, String args){
 		return executeMethod(name, args,false);
 	}
+	public Long executeEquals(String args){
+		List<String> passedArgs=BlockExtractor.separateArgs(args);
+		String argExecInput="return "+passedArgs.get(0)+Constants.END_STATEMENT;
+		Object arg1 =RunMethod.executeBlock(argExecInput, frame, library);
+		argExecInput="return "+passedArgs.get(1)+Constants.END_STATEMENT;
+		Object arg2 =RunMethod.executeBlock(argExecInput, frame, library);
+		if(arg1.equals(arg2))
+			return (long) 1;
+		return (long) 0;
+		
+		
+	}
+	public Long executeLength(String args){
+		List<String> passedArgs=BlockExtractor.separateArgs(args);
+		String argExecInput="return "+passedArgs.get(0)+Constants.END_STATEMENT;
+		ArrayList<Object> arg1 =(ArrayList<Object>)RunMethod.executeBlock(argExecInput, frame, library);
+		return (long) arg1.size();
+	}
+	//list name, object
+	public Object executeAppend(String args){
+		List<String> passedArgs=BlockExtractor.separateArgs(args);
+		String argExecInput="return "+passedArgs.get(0)+Constants.END_STATEMENT;
+		ArrayList<Object> arg1 =(ArrayList<Object>)RunMethod.executeBlock(argExecInput, frame, library);
+		argExecInput="return "+passedArgs.get(1)+Constants.END_STATEMENT;
+		Object arg2 =RunMethod.executeBlock(argExecInput, frame, library);
+		arg1.add(arg2);
+		return null;
+		
+		
+	}
+	//list name, object
+	public Object executeArrRm(String args){
+		List<String> passedArgs=BlockExtractor.separateArgs(args);
+		//DecompDebug.println(args);
+		String argExecInput="return "+passedArgs.get(0)+Constants.END_STATEMENT;
+		ArrayList<Object> arg1 =(ArrayList<Object>)RunMethod.executeBlock(argExecInput, frame, library);
+		argExecInput="return "+passedArgs.get(1)+Constants.END_STATEMENT;
+		Long arg2 =(Long)RunMethod.executeBlock(argExecInput, frame, library);
+		arg1.remove(arg2.intValue());
+		return null;
+		
+		
+	}
+	//map name, key
+	public Object executeGet(String args){
+		List<String> passedArgs=BlockExtractor.separateArgs(args);
+		String argExecInput="return "+passedArgs.get(0)+Constants.END_STATEMENT;
+		HashMap<Object,Object> arg1 =(HashMap<Object,Object>)RunMethod.executeBlock(argExecInput, frame, library);
+		argExecInput="return "+passedArgs.get(1)+Constants.END_STATEMENT;
+		Object arg2 =RunMethod.executeBlock(argExecInput, frame, library);
+		arg1.get(arg2);
+		return arg1.get(arg2);
+		
+		
+	}
+	public Object executeDictRemove(String args){
+		List<String> passedArgs=BlockExtractor.separateArgs(args);
+		String argExecInput="return "+passedArgs.get(0)+Constants.END_STATEMENT;
+		HashMap<Object,Object> arg1 =(HashMap<Object,Object>)RunMethod.executeBlock(argExecInput, frame, library);
+		argExecInput="return "+passedArgs.get(1)+Constants.END_STATEMENT;
+		Object arg2 =RunMethod.executeBlock(argExecInput, frame, library);
+		arg1.remove(arg2);
+		return null;
+		
+		
+	}
+	public Long executeContains(String args){
+		List<String> passedArgs=BlockExtractor.separateArgs(args);
+		String argExecInput="return "+passedArgs.get(0)+Constants.END_STATEMENT;
+		HashMap<Object,Object> arg1 =(HashMap<Object,Object>)RunMethod.executeBlock(argExecInput, frame, library);
+		argExecInput="return "+passedArgs.get(1)+Constants.END_STATEMENT;
+		Object arg2 =RunMethod.executeBlock(argExecInput, frame, library);
+		if(arg1.containsKey(arg2))
+			return (long)1;
+		return (long) 0;
+		
+		
+		
+	}
+	public Object executePut(String args){
+		List<String> passedArgs=BlockExtractor.separateArgs(args);
+		String argExecInput="return "+passedArgs.get(0)+Constants.END_STATEMENT;
+		HashMap<Object,Object> arg1 =(HashMap<Object,Object>)RunMethod.executeBlock(argExecInput, frame, library);
+		argExecInput="return "+passedArgs.get(1)+Constants.END_STATEMENT;
+		Object arg2 =RunMethod.executeBlock(argExecInput, frame, library);
+		argExecInput="return "+passedArgs.get(2)+Constants.END_STATEMENT;
+		Object arg3 =RunMethod.executeBlock(argExecInput, frame, library);
+		arg1.put(arg2,arg3);
+		return null;
+		
+		
+	}
+	public Object isBuiltIn(String name, String args){
+		if(name.equals(Constants.KEYWORD_EQUALS))
+			return executeEquals(args);
+		if(name.equals(Constants.KEYWORD_LENGTH))
+			return executeLength(args);
+		if(name.equals(Constants.KEYWORD_APPEND))
+			return executeAppend(args);
+		if(name.equals(Constants.KEYWORD_ARRAY_REMOVE))
+			return executeArrRm(args);
+		if(name.equals(Constants.KEYWORD_GET))
+			return executeGet(args);
+		if(name.equals(Constants.KEYWORD_PUT))
+			return executePut(args);
+		if(name.equals(Constants.KEYWORD_CONTAINS_KEY))
+			return executeContains(args);
+		if(name.equals(Constants.KEYWORD_DICT_REMOVE))
+			return executeDictRemove(args);
+		return new Boolean(false);
+	}
 	public Object executeMethod(String name, String args, boolean isTail){
+		//DecompDebug.println(name);
+		Object ibi=isBuiltIn(name,args);
+		if(ibi==null||!ibi.equals(new Boolean(false))){
+			Object temp=ibi;
+			
+			if(temp instanceof String)
+				return "\""+temp+"\"";
+			if(temp instanceof Long)
+				return temp+"";
+			if(temp instanceof Double)
+				return temp+"";
+			return temp;
+		}
+		
 		StackFrame newFrame=new StackFrame();
 		List<String> origArgList=library.methods.get(name).getArgs();
 		List<String> passedArgs=BlockExtractor.separateArgs(args);
